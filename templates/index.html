@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Traffic Simulation</h1>
     <!-- Increased canvas width from 1200 to 2000 for a wider simulation window -->
     <canvas id="simulation-canvas" width="2000" height="600"></canvas>
     <div id="metrics">
@@ -22,12 +21,6 @@
         </div>
     </div>
 
-    <!-- Add controls for simulation speed -->
-    <div id="controls">
-        <label for="speed-slider">Simulation Speed:</label>
-        <input type="range" id="speed-slider" min="1" max="20" value="5">
-        <span id="speed-value">5</span> steps/sec
-    </div>
 
     <!-- Include Socket.IO -->
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
