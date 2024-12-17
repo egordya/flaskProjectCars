@@ -1,0 +1,30 @@
+/* static/styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #343a40;
+    margin-top: 20px;
+}
+
+#simulation-canvas {
+    border: 2px solid #343a40;
+    background-color: #ffffff;
+    margin-top: 20px;
+}
+
+#metrics {
+    margin-top: 20px;
+    color: #343a40;
+}
+
+#road1-metrics, #road2-metrics {
+    margin-bottom: 10px;
+}
+

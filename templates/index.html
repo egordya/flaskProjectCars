@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Traffic Simulation</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Traffic Simulation</h1>
+    <!-- Increased canvas width from 1200 to 2000 for a wider simulation window -->
+    <canvas id="simulation-canvas" width="2000" height="600"></canvas>
+    <div id="metrics">
+        <h2>Metrics</h2>
+        <div id="road1-metrics">
+            <h3>Road 1</h3>
+            <p id="road1-info"></p>
+        </div>
+        <div id="road2-metrics">
+            <h3>Road 2</h3>
+            <p id="road2-info"></p>
+        </div>
+    </div>
+
+    <!-- Add controls for simulation speed -->
+    <div id="controls">
+        <label for="speed-slider">Simulation Speed:</label>
+        <input type="range" id="speed-slider" min="1" max="20" value="5">
+        <span id="speed-value">5</span> steps/sec
+    </div>
+
+    <!-- Include Socket.IO -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <!-- Link to the external JavaScript file -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
