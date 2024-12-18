@@ -44,7 +44,7 @@ def background_thread():
         socketio.emit('simulation_state', state)
         logging.debug(f"Emitted state for step {state['step']}")
 
-if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
-#https://7dd1-46-239-114-85.ngrok-free.app
-#ngrok http 5000
+# if __name__ == '__main__':
+#     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+# #https://7dd1-46-239-114-85.ngrok-free.app
+# #ngrok http 5000
