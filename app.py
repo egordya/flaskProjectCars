@@ -35,14 +35,13 @@ def handle_disconnect():
 
 def background_thread():
     """Send simulation state to clients periodically."""
-    steps_per_second = simulation.steps_per_second  # Use the fixed steps_per_second
     sleep_interval = simulation.sleep_interval  # Interval between steps in seconds
 
-    while simulation.running and simulation.step < simulation.steps:
+    while simulation.running:  # Remove the step limit
         socketio.sleep(sleep_interval)
         state = simulation.get_state()
         socketio.emit('simulation_state', state)
-        logging.debug(f"Emitted state for step {state['step']}")
+       # logging.debug(f"Emitted state for step {state['step']}")
 
 # if __name__ == '__main__':
 #     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

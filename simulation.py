@@ -145,7 +145,7 @@ class Simulation:
         logging.info("Simulation started.")
 
     def run(self):
-        while self.running and self.step < self.steps:
+        while self.running:  # Remove the step limit
             with self.lock:
                 self.run_step()
             time.sleep(self.sleep_interval)  # Use the fixed sleep interval
