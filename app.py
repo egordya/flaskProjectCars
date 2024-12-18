@@ -15,7 +15,6 @@ socketio = SocketIO(app, async_mode='eventlet')
 
 # Initialize the simulation with fixed steps_per_second
 simulation = Simulation(steps_per_second=6)  # Set to 6 steps/sec
-simulation.start()
 
 @app.route('/')
 def index():
@@ -36,14 +35,19 @@ def handle_disconnect():
 def background_thread():
     """Send simulation state to clients periodically."""
     sleep_interval = simulation.sleep_interval  # Interval between steps in seconds
+    logging.info("Background thread started.")
 
-    while simulation.running:  # Remove the step limit
+    while simulation.running:
         socketio.sleep(sleep_interval)
         state = simulation.get_state()
         socketio.emit('simulation_state', state)
-       # logging.debug(f"Emitted state for step {state['step']}")
+        logging.debug(f"Emitted state for step {state['step']}")
 
-if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=False)
+    logging.info("Background thread stopped.")
+
+simulation.start()
+
+# if __name__ == '__main__':
+#     socketio.run(app, host='0.0.0.0', port=5000, debug=False)
 # #https://7dd1-46-239-114-85.ngrok-free.app
 # #ngrok http 5000
