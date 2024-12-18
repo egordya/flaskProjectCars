@@ -4,9 +4,7 @@ import time
 import logging
 from Car import Car
 
-
-
-# Configure logging (already done in app.py, but keeping for module-specific logs)
+# Configure logging for simulation module
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Simulation:
@@ -29,7 +27,7 @@ class Simulation:
         self.vmax = vmax
         self.p_fault = p_fault
         self.p_slow = p_slow
-        self.steps = steps
+        self.steps = steps  # Currently unused for infinite simulation
         self.prob_faster = prob_faster
         self.prob_slower = prob_slower
         self.prob_normal = prob_normal
@@ -58,6 +56,7 @@ class Simulation:
         with self.lock:
             self.steps_per_second = steps_per_second
             self.sleep_interval = 1.0 / self.steps_per_second
+            logging.info(f"Steps per second set to {self.steps_per_second}, sleep interval updated to {self.sleep_interval} seconds.")
 
     def initialize_cars(self, adaptive_cruise_control):
         occupied_positions = set()
@@ -81,78 +80,95 @@ class Simulation:
                 adaptive_cruise_control=adaptive_cruise_control
             )
             cars.append(car)
+        road_type = "Road 1 (ACC)" if adaptive_cruise_control else "Road 2 (Human)"
+        logging.debug(f"Initialized {len(cars)} cars on {road_type}.")
         return cars
 
     def run_step(self):
-        # Update Road 1
-        self.update_road(self.cars_road1)
+        try:
+            logging.debug(f"Starting run_step for step {self.step + 1}.")
+            # Update Road 1
+            self.update_road(self.cars_road1)
 
-        # Update Road 2
-        self.update_road(self.cars_road2)
+            # Update Road 2
+            self.update_road(self.cars_road2)
 
-        # Compute metrics
-        self.compute_metrics()
+            # Compute metrics
+            self.compute_metrics()
 
-        self.step += 1
+            self.step += 1
+            logging.debug(f"Completed run_step for step {self.step}.")
+        except Exception as e:
+            logging.error(f"Exception in run_step: {e}")
+            self.running = False  # Stop simulation on error
 
     def update_road(self, cars):
-        cars_sorted = sorted(cars, key=lambda c: c.position)
-        num_cars = len(cars_sorted)
-        for i, car in enumerate(cars_sorted):
-            if i < num_cars - 1:
-                next_car = cars_sorted[i + 1]
-                distance = next_car.position - car.position - 1
-                if distance < 0:
-                    distance += self.L
-            else:
-                next_car = cars_sorted[0]
-                distance = (next_car.position + self.L) - car.position - 1
-            velocity_of_next_car = next_car.velocity
-            car.update_velocity(distance, velocity_of_next_car)
+        try:
+            cars_sorted = sorted(cars, key=lambda c: c.position)
+            num_cars = len(cars_sorted)
+            for i, car in enumerate(cars_sorted):
+                if i < num_cars - 1:
+                    next_car = cars_sorted[i + 1]
+                    distance = next_car.position - car.position - 1
+                    if distance < 0:
+                        distance += self.L
+                else:
+                    next_car = cars_sorted[0]
+                    distance = (next_car.position + self.L) - car.position - 1
+                velocity_of_next_car = next_car.velocity
+                car.update_velocity(distance, velocity_of_next_car)
+                logging.debug(f"Car at position {car.position} updated with distance {distance} and next car velocity {velocity_of_next_car}.")
 
-        for car in cars_sorted:
-            car.move()
+            for car in cars_sorted:
+                car.move()
+                logging.debug(f"Car moved to new position {car.position} with velocity {car.velocity}.")
+        except Exception as e:
+            logging.error(f"Exception in update_road: {e}")
+            self.running = False  # Stop simulation on error
 
     def compute_metrics(self):
-        average_speed_road1 = np.mean([c.velocity for c in self.cars_road1]) if self.cars_road1 else 0
-        stopped_vehicles_road1 = sum(c.velocity == 0 for c in self.cars_road1)
-        average_speed_road2 = np.mean([c.velocity for c in self.cars_road2]) if self.cars_road2 else 0
-        stopped_vehicles_road2 = sum(c.velocity == 0 for c in self.cars_road2)
+        try:
+            average_speed_road1 = np.mean([c.velocity for c in self.cars_road1]) if self.cars_road1 else 0
+            stopped_vehicles_road1 = sum(c.velocity == 0 for c in self.cars_road1)
+            average_speed_road2 = np.mean([c.velocity for c in self.cars_road2]) if self.cars_road2 else 0
+            stopped_vehicles_road2 = sum(c.velocity == 0 for c in self.cars_road2)
 
-        self.metrics['road1'] = {
-            'average_speed': average_speed_road1,
-            'stopped_vehicles': stopped_vehicles_road1,
-            'density': self.rho
-        }
-        self.metrics['road2'] = {
-            'average_speed': average_speed_road2,
-            'stopped_vehicles': stopped_vehicles_road2,
-            'density': self.rho
-        }
+            self.metrics['road1'] = {
+                'average_speed': average_speed_road1,
+                'stopped_vehicles': stopped_vehicles_road1,
+                'density': self.rho
+            }
+            self.metrics['road2'] = {
+                'average_speed': average_speed_road2,
+                'stopped_vehicles': stopped_vehicles_road2,
+                'density': self.rho
+            }
 
-    # ngrok
-    # config
-    # add - authtoken $2
-    # qID5F1Dl9OuCZZSIbRrCkGpqJa_r6gctcVh4U4Z8VD9pnbP
-# ngrok config add-authtoken 2qID5F1Dl9OuCZZSIbRrCkGpqJa_r6gctcVh4U4Z8VD9pnbP
-    # logging.debug(f"Step {self.step}: Road1 - Avg Speed: {average_speed_road1}, Stopped: {stopped_vehicles_road1}; "
-       #               f"Road2 - Avg Speed: {average_speed_road2}, Stopped: {stopped_vehicles_road2}")
+            logging.debug(f"Metrics at step {self.step}: Road1 - Avg Speed: {average_speed_road1}, Stopped: {stopped_vehicles_road1}; Road2 - Avg Speed: {average_speed_road2}, Stopped: {stopped_vehicles_road2}")
+        except Exception as e:
+            logging.error(f"Exception in compute_metrics: {e}")
+            self.running = False  # Stop simulation on error
 
     def start(self):
-        self.running = True
-        self.thread = threading.Thread(target=self.run)
-        self.thread.start()
-        logging.info("Simulation started.")
+        with self.lock:
+            if not self.running:
+                self.running = True
+                self.thread = threading.Thread(target=self.run)
+                self.thread.start()
+                logging.info("Simulation started.")
 
     def run(self):
-        while self.running:  # Remove the step limit
+        logging.info("Simulation thread is running.")
+        while self.running:
             with self.lock:
                 self.run_step()
-            time.sleep(self.sleep_interval)  # Use the fixed sleep interval
-        logging.info("Simulation ended.")
+            logging.debug(f"Sleeping for {self.sleep_interval} seconds.")
+            time.sleep(self.sleep_interval)
+        logging.info("Simulation thread has stopped.")
 
     def stop(self):
-        self.running = False
+        with self.lock:
+            self.running = False
         self.thread.join()
         logging.info("Simulation stopped.")
 
@@ -178,4 +194,5 @@ class Simulation:
                 ],
                 'metrics': self.metrics
             }
+        logging.debug(f"State retrieved at step {self.step}")
         return state

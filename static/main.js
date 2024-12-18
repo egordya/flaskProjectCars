@@ -121,6 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
      * Handle incoming simulation state and render graphics.
      */
     socket.on('simulation_state', (state) => {
+        if (!state || typeof state.step !== 'number') {
+            console.error('Invalid simulation state received:', state);
+            return;
+        }
+
+        console.log(`Received state for step ${state.step}`);
+
         // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -141,8 +148,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
-     * Handle connection errors.
+     * Handle connection events.
      */
+    socket.on('connect', () => {
+        console.log('Connected to server.');
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Disconnected from server.');
+    });
+
     socket.on('connect_error', (err) => {
         console.error('Connection error:', err);
     });
