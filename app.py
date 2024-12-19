@@ -42,7 +42,7 @@ def emit_states():
         socketio.sleep(simulation.sleep_interval)
         state = simulation.get_state()
         socketio.emit('simulation_state', state)
-        logging.debug(f"Emitted state for step {state['step']}")
+        #logging.debug(f"Emitted state for step {state['step']}")
 
 # The 'if __name__ == "__main__":' block remains commented out for deployment
 # It is only used for local development with Flask's built-in server

@@ -13,18 +13,47 @@ h1 {
     margin-top: 20px;
 }
 
+#simulation-container {
+    position: relative;
+    width: 2000px; /* Match canvas width */
+    height: 600px; /* Match canvas height */
+    margin: 20px auto; /* Center the container with top margin */
+    background-color: #f8f9fa; /* Light background for contrast */
+}
+
 #simulation-canvas {
-    border: 2px solid #343a40;
-    background-color: #ffffff;
-    margin-top: 20px;
+    border: 2px solid #343a40; /* Dark border for visibility */
+    background-color: #ffffff; /* White background for roads */
 }
 
-#metrics {
-    margin-top: 20px;
-    color: #343a40;
+.metrics-overlay {
+    position: absolute;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 180px; /* Fixed width for consistency */
+    font-family: Arial, sans-serif;
 }
 
-#road1-metrics, #road2-metrics {
-    margin-bottom: 10px;
+#metrics-road1 {
+    top: 100px; /* Positioned above Road1 */
+    left: 10px; /* Aligned to the left */
+    color: salmon; /* Text color for ACC cars */
 }
 
+#metrics-road2 {
+    top: 300px; /* Positioned above Road2 */
+    left: 10px; /* Aligned to the left */
+    color: dodgerblue; /* Text color for Non-ACC (Human) cars */
+}
+
+.metrics-overlay h3 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+.metrics-overlay p {
+    margin: 0;
+    font-size: 14px;
+}

@@ -5,22 +5,76 @@
     <title>Traffic Simulation</title>
     <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Container to hold the canvas and overlays */
+        #simulation-container {
+            position: relative;
+            width: 2000px; /* 100 cells * 20px = 2000px width */
+            height: 600px;
+            margin: 0 auto; /* Center the container horizontally */
+            background-color: #f8f9fa; /* Light background for contrast */
+        }
+
+        /* Styling for the canvas */
+        #simulation-canvas {
+            border: 2px solid #343a40; /* Dark border for visibility */
+            background-color: #ffffff; /* White background for roads */
+        }
+
+        /* Common styling for both metrics overlays */
+        .metrics-overlay {
+            position: absolute;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            width: 180px; /* Fixed width for consistency */
+            font-family: Arial, sans-serif;
+        }
+
+        /* Specific styling for Road 1 (ACC Cars) Metrics */
+        #metrics-road1 {
+            top: 10px; /* Positioned above Road 1 */
+            left: 10px; /* Aligned to the left */
+            color: salmon; /* Text color set to salmon */
+        }
+
+        /* Specific styling for Road 2 (Human Drivers) Metrics */
+        #metrics-road2 {
+            top: 500px; /* Positioned above Road 2 */
+            left: 10px; /* Aligned to the left */
+            color: dodgerblue; /* Text color set to dodger blue */
+        }
+
+        /* Optional: Styling for headings */
+        .metrics-overlay h3 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        /* Optional: Styling for metric information */
+        .metrics-overlay p {
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Increased canvas width from 1200 to 2000 for a wider simulation window -->
-    <canvas id="simulation-canvas" width="2000" height="600"></canvas>
-    <div id="metrics">
-        <h2>Metrics</h2>
-        <div id="road1-metrics">
-            <h3>Road 1</h3>
-            <p id="road1-info"></p>
+    <h1>Traffic Simulation</h1> <!-- Optional: Add a title for clarity -->
+    <div id="simulation-container">
+        <!-- Simulation Canvas -->
+        <canvas id="simulation-canvas" width="2000" height="600"></canvas> <!-- 100 cells * 20px = 2000px width -->
+
+        <!-- Metrics Overlays -->
+        <div id="metrics-road1" class="metrics-overlay">
+            <h3>ACC Cars</h3>
+            <p id="road1-info">Loading...</p>
         </div>
-        <div id="road2-metrics">
-            <h3>Road 2</h3>
-            <p id="road2-info"></p>
+        <div id="metrics-road2" class="metrics-overlay">
+            <h3>Human Drivers</h3>
+            <p id="road2-info">Loading...</p>
         </div>
     </div>
-
 
     <!-- Include Socket.IO -->
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>

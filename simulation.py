@@ -10,15 +10,15 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 class Simulation:
     def __init__(
         self,
-        L=120,
-        N=30,
-        vmax=4,
+        L=100,
+        N=24,
+        vmax=3,
         p_fault=0.1,
         p_slow=0.5,
         steps=1000,
-        prob_faster=0.70,
+        prob_faster=0.50,
         prob_slower=0.10,
-        prob_normal=0.20,
+        prob_normal=0.40,
         steps_per_second=2,  # New parameter
     ):
         # Initialize simulation parameters
@@ -56,7 +56,7 @@ class Simulation:
         with self.lock:
             self.steps_per_second = steps_per_second
             self.sleep_interval = 1.0 / self.steps_per_second
-            logging.info(f"Steps per second set to {self.steps_per_second}, sleep interval updated to {self.sleep_interval} seconds.")
+            #logging.info(f"Steps per second set to {self.steps_per_second}, sleep interval updated to {self.sleep_interval} seconds.")
 
     def initialize_cars(self, adaptive_cruise_control):
         occupied_positions = set()
@@ -81,12 +81,12 @@ class Simulation:
             )
             cars.append(car)
         road_type = "Road 1 (ACC)" if adaptive_cruise_control else "Road 2 (Human)"
-        logging.debug(f"Initialized {len(cars)} cars on {road_type}.")
+        #logging.debug(f"Initialized {len(cars)} cars on {road_type}.")
         return cars
 
     def run_step(self):
         try:
-            logging.debug(f"Starting run_step for step {self.step + 1}.")
+            #logging.debug(f"Starting run_step for step {self.step + 1}.")
             # Update Road 1
             self.update_road(self.cars_road1)
 
@@ -97,7 +97,7 @@ class Simulation:
             self.compute_metrics()
 
             self.step += 1
-            logging.debug(f"Completed run_step for step {self.step}.")
+            #logging.debug(f"Completed run_step for step {self.step}.")
         except Exception as e:
             logging.error(f"Exception in run_step: {e}")
             self.running = False  # Stop simulation on error
@@ -117,11 +117,11 @@ class Simulation:
                     distance = (next_car.position + self.L) - car.position - 1
                 velocity_of_next_car = next_car.velocity
                 car.update_velocity(distance, velocity_of_next_car)
-                logging.debug(f"Car at position {car.position} updated with distance {distance} and next car velocity {velocity_of_next_car}.")
+                #logging.debug(f"Car at position {car.position} updated with distance {distance} and next car velocity {velocity_of_next_car}.")
 
             for car in cars_sorted:
                 car.move()
-                logging.debug(f"Car moved to new position {car.position} with velocity {car.velocity}.")
+                #logging.debug(f"Car moved to new position {car.position} with velocity {car.velocity}.")
         except Exception as e:
             logging.error(f"Exception in update_road: {e}")
             self.running = False  # Stop simulation on error
@@ -144,7 +144,7 @@ class Simulation:
                 'density': self.rho
             }
 
-            logging.debug(f"Metrics at step {self.step}: Road1 - Avg Speed: {average_speed_road1}, Stopped: {stopped_vehicles_road1}; Road2 - Avg Speed: {average_speed_road2}, Stopped: {stopped_vehicles_road2}")
+            #logging.debug(f"Metrics at step {self.step}: Road1 - Avg Speed: {average_speed_road1}, Stopped: {stopped_vehicles_road1}; Road2 - Avg Speed: {average_speed_road2}, Stopped: {stopped_vehicles_road2}")
         except Exception as e:
             logging.error(f"Exception in compute_metrics: {e}")
             self.running = False  # Stop simulation on error
@@ -162,7 +162,7 @@ class Simulation:
         while self.running:
             with self.lock:
                 self.run_step()
-            logging.debug(f"Sleeping for {self.sleep_interval} seconds.")
+            #logging.debug(f"Sleeping for {self.sleep_interval} seconds.")
             time.sleep(self.sleep_interval)
         logging.info("Simulation thread has stopped.")
 
@@ -194,5 +194,5 @@ class Simulation:
                 ],
                 'metrics': self.metrics
             }
-        logging.debug(f"State retrieved at step {self.step}")
+        #logging.debug(f"State retrieved at step {self.step}")
         return state
