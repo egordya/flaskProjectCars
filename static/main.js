@@ -119,8 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {Object} state - Current simulation state.
      */
     function updateMetrics(state) {
-        const road1Info = `Road 1 - Step: ${state.step} | Density: ${state.metrics.road1.density.toFixed(2)} | Avg Speed: ${state.metrics.road1.average_speed.toFixed(2)} | Stopped: ${state.metrics.road1.stopped_vehicles} | Max-Vel: 3`;
-        const road2Info = `Road 2 - Step: ${state.step} | Density: ${state.metrics.road2.density.toFixed(2)} | Avg Speed: ${state.metrics.road2.average_speed.toFixed(2)} | Stopped: ${state.metrics.road2.stopped_vehicles} | Max-Vel: 3`;
+        const road1Info = `Road 1 | Density: ${state.metrics.road1.density.toFixed(2)} | Avg Speed: ${state.metrics.road1.average_speed.toFixed(2)} | Stopped: ${state.metrics.road1.stopped_vehicles} | Max-Vel: 3`;
+        const road2Info = `Road 2 | Density: ${state.metrics.road2.density.toFixed(2)} | Avg Speed: ${state.metrics.road2.average_speed.toFixed(2)} | Stopped: ${state.metrics.road2.stopped_vehicles} | Max-Vel: 3`;
 
         document.getElementById('road1-info').innerText = road1Info;
         document.getElementById('road2-info').innerText = road2Info;

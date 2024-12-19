@@ -47,5 +47,5 @@ def emit_states():
 # The 'if __name__ == "__main__":' block remains commented out for deployment
 # It is only used for local development with Flask's built-in server
 
-if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=False)
+# if __name__ == '__main__':
+#     socketio.run(app, host='0.0.0.0', port=5000, debug=False)
